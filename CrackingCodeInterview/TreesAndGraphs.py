@@ -1,6 +1,7 @@
 import sys
 sys.path.append("../ds")
 from Tree import *
+from DirectedGraph import *
 
 
 def array_to_bst(sorted_array,start_index,end_index):
@@ -94,3 +95,18 @@ def get_successor(node):
                 parent = node.parent
         return None
 
+
+
+def get_build_order(num_tasks,order_list):
+    #Directed graph gives order of precedence.
+    #Topological sort is the answer but question is to detect cycle
+    #Update graph connections
+    directed_graph=DirectedGraph(num_tasks)
+    for target,source in order_list:
+        directed_graph.connect(source, target)
+    #Detect if there is a cycle in the graph
+    node_sequence=[]
+    for node in directed_graph.nodes:
+        node_sequence = node_sequence + directed_graph.get_dfs(node)
+    node_sequence.reverse()
+    return node_sequence

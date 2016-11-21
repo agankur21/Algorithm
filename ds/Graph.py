@@ -7,6 +7,7 @@ class Graph:
         self.adjacency_dict = {node: set() for node in self.nodes}
         self.visited = [False] * num_nodes
         self.distance_count = [0] * num_nodes
+        self.reverse_topological_order = []
 
     def check_visited(self, node):
         return self.visited[node]
@@ -21,6 +22,7 @@ class Graph:
     def reset(self):
         self.visited = [False for i in self.visited]
         self.distance_count = [-1 for i in self.distance_count]
+        self.reverse_topological_order = []
 
     def get_bfs(self, node):
         self.update_visited(node)
@@ -36,18 +38,50 @@ class Graph:
                     self.distance_count[neighbour] = self.distance_count[element] + 1
         self.distance_count = [x if x > 0 else -1 for x in self.distance_count]
 
+
     def get_dfs(self,node):
-        self.update_visited(node)
         connected_nodes=[]
         stack = [node]
         while len(stack) > 0 :
             element = stack.pop()
-            for neighbour in self.adjacency_dict[element]:
-                if self.check_visited(neighbour) is False:
-                    self.update_visited(neighbour)
-                    stack.append(neighbour)
-                    connected_nodes.append(neighbour)
+            if self.check_visited(element) is False:
+                self.update_visited(element)
+                connected_nodes.append(element)
+                for neighbour in self.adjacency_dict[element]:
+                    if self.check_visited(neighbour) is False:
+                        stack.append(neighbour)
         return connected_nodes
+
+
+    def get_topological_sort_recursion(self,node):
+        if self.check_visited(node) is False:
+            self.update_visited(node)
+            for neighbour in self.adjacency_dict[node]:
+                if self.check_visited(neighbour) is False:
+                    self.get_topological_sort_recursion(neighbour)
+            self.reverse_topological_order.append(node)
+
+
+    def get_topological_sort_stack(self,node):
+        stack=[node]
+        reverse_topological_order=[]
+        while len(stack) > 0:
+            element = stack[-1]
+            if self.check_visited(element) is False:
+                num_neighbours_unvisited=0
+                for neighbour in self.adjacency_dict[element]:
+                    if self.check_visited(neighbour) is False:
+                        stack.append(neighbour)
+                        num_neighbours_unvisited +=1
+                if num_neighbours_unvisited ==0:
+                    reverse_topological_order.append(element)
+                    self.update_visited(element)
+                    stack.pop()
+            else:
+                stack.pop()
+        reverse_topological_order.reverse()
+        return reverse_topological_order
+
 
     def find_all_distances(self, starting_index):
         self.reset()

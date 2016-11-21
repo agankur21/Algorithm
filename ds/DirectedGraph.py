@@ -9,4 +9,10 @@ class DirectedGraph(Graph):
         self.adjacency_dict[index1].add(index2)
 
 
+    def has_cycle(self):
+        #To do:
+        pass
+
+
+
 
