@@ -1,0 +1,11 @@
+*.sw?
+node_modules/*
+.DS_Store
+npm-debug.log
+*.pyc
+.ipynb
+!./tutorial/*.ipynb
+*/.ipynb_checkpoints
+.csv
+*.log
+*.idea
