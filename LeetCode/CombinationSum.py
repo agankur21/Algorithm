@@ -34,20 +34,39 @@ class Solution(object):
                 self.cache[(min_value, balance)] = None
             return self.cache[(min_value, balance)]
 
+
+    def backtrack_combination(self,candidates,target,start,out_list,temp_list,used):
+            if target == 0:
+                out_list.append(list(temp_list))
+            else:
+                for i in range(start,len(candidates)):
+                    candidate = candidates[i]
+                    if target < candidate:
+                        break
+                    else:
+                        if i > 0 and (candidates[i] != candidates[i-1] or used[i-1]):
+                            temp_list.append(candidate)
+                            used[i]=True
+                            self.backtrack_combination(candidates,target-candidate,i+1,out_list,temp_list,used)
+                            temp_list.pop()
+                            used[i]=False
+
+
     def combinationSum(self, candidates, target):
         """
         :type candidates: List[int]
         :type target: int
         :rtype: List[List[int]]
         """
-        out = self.update_combination(candidates, 0, target)
-        if out is None:
-            return []
-        else:
-            return out
+        candidates.sort()
+        out_list=[]
+        temp_list=[]
+        used = [False]*len(candidates)
+        self.backtrack_combination(candidates,target,0,out_list,temp_list,used)
+        return out_list
 
 
 if __name__ == '__main__':
     solution = Solution()
-    print solution.combinationSum([2,3, 5,7], 7)
+    print solution.combinationSum([10,1,2,7,6,1,5], 8)
     pass

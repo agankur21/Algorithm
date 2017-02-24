@@ -19,7 +19,7 @@ class Solution:
             if i > start and nums[i]==nums[i-1]:
                 continue
             temp_list.append(nums[i])
-            self.backtrack_unique(out_list, temp_list, nums, i + 1)
+            self.backtrack_duplicates(out_list, temp_list, nums, i + 1)
             temp_list.pop()
 
 if __name__ == '__main__':
